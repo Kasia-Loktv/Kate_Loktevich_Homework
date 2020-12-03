@@ -1,38 +1,74 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Princess
 {
-    class Game
+    public class Game
     {
-        public void GetTraps(ref string[,] trap)
-        {           
-            Random random = new Random();
-            for (int i = 0; i <= 9; i++)
+        private const int numberOfRows = 10;
+        private const int numberOfSlashes = 11;
+
+        private const string separatorOfRows = "------------------------------------------";
+        private const string finalText = "Возвращайся скорее, ещё много принцесс ждут, когда ты их спасешь";
+        private const string win = "ВЫ ПОБЕДИЛИ!!!  Принцесса спасена \nЖелаете ли вы спасти еще одну принцессу?\n1) Да, нужно спасти больше принцесс\n2) Нет, с меня хватит, я устал";
+        private const string loss = "ВЫ ПРОИГРАЛИ \nЖелаете ли вы еще раз попробовать спасти принцессу?\n1) Да, я должен ее спасти\n2) Нет, думаю, придет другой принц и спасет её";
+
+        private string[,] traps;
+        private bool isStart = true;
+        private bool isContinue = true;
+
+        Prince prince;
+
+        public void PlayGame()
+        {
+            isStart = true;
+
+            while (isStart)
             {
-                trap[random.Next(1, 11), random.Next(1, 11)] = "*";
+                traps = new string[11, 11];
+                prince = new Prince();
+
+                SetTraps();
+
+                isContinue = true;
+
+                while (isContinue)
+                {
+                    PrintField();
+
+                    prince.PrintHP();
+
+                    MovePrince();
+                    ReduceHP();
+                    FinishGame();
+                }
             }
         }
-        
 
-        public void PrintField(ref Prince prince)
+        public void SetTraps()
         {
-            for (int i = 1; i <= 10; i++)
+            Random random = new Random();
+
+            for (int i = 0; i <= 9; i++)
             {
-                for (int k = 1; k < 8; k++)
-                {
-                    Console.Write("------");
-                }
-                Console.WriteLine();
-                for (int j = 1; j <= 11; j++)
+                traps[random.Next(1, 11), random.Next(1, 11)] = "*";
+            }
+        }
+
+        public void PrintField()
+        {
+            for (int row = 1; row <= numberOfRows; row++)
+            {
+                Console.WriteLine(separatorOfRows);
+
+                for (int column = 1; column <= numberOfSlashes; column++)
                 {
                     Console.Write("| ");
-                    if (j == prince.valueXPrince && i == prince.valueYPrince)
+
+                    if (column == prince.XPrince && row == prince.YPrince)
                     {
                         Console.Write("X ");
                     }
-                    else if (i == 10 && j == 10)
+                    else if (row == 10 && column == 10)
                     {
                         Console.Write("P ");
                     }
@@ -41,105 +77,109 @@ namespace Princess
                         Console.Write("  ");
                     }
                 }
+
                 Console.WriteLine();
             }
-            for (int k = 1; k < 8; k++)
-            {
-                Console.Write("------");
-            }
+
+            Console.WriteLine(separatorOfRows);
         }
 
-        public void MovePrince(ref Prince prince)
+        public void MovePrince()
         {
-            Console.WriteLine("\nПользуйтесь клавишами w, a, s, d для управления \nw - вверх \ns - вниз \na - влево \nd - вправо");
-            Console.Write("Ваш выбор: ");
-            string direction = Console.ReadLine();
-            switch (direction)
+            switch (Console.ReadKey().Key)
             {
-                case "w":
-                    if (prince.valueYPrince == 1)
+                case ConsoleKey.UpArrow:
+                    if (prince.YPrince == 1)
                     {
                         break;
                     }
-                    prince.valueYPrince -= 1;
+                    prince.YPrince -= 1;
                     break;
-                case "s":
-                    if (prince.valueYPrince == 10)
+
+                case ConsoleKey.DownArrow:
+                    if (prince.YPrince == 10)
                     {
                         break;
                     }
-                    prince.valueYPrince += 1;
+                    prince.YPrince += 1;
                     break;
-                case "a":
-                    if (prince.valueXPrince == 1)
+
+                case ConsoleKey.LeftArrow:
+                    if (prince.XPrince == 1)
                     {
                         break;
                     }
-                    prince.valueXPrince -= 1;
+                    prince.XPrince -= 1;
                     break;
-                case "d":
-                    if (prince.valueXPrince == 10)
+
+                case ConsoleKey.RightArrow:
+                    if (prince.XPrince == 10)
                     {
                         break;
                     }
-                    prince.valueXPrince += 1;
+                    prince.XPrince += 1;
                     break;
             }
 
             Console.SetCursorPosition(0, 0);
         }
-        public void FallIntoTrap(ref Prince prince, ref string[,] tr)
+
+        public void ReduceHP()
         {
             Random random = new Random();
-            if (tr[prince.valueXPrince, prince.valueYPrince] == "*")
-            {
 
+            if (traps[prince.XPrince, prince.YPrince] == "*")
+            {
                 prince.HP -= random.Next(1, 11);
             }
         }
-        public void FinishGame(ref Prince prince, ref bool starting, ref bool continuation)
+
+        public void FinishGame()
         {
-            bool condition = false;
+            bool conditionEndGame = false;
+
             if (prince.HP <= 0)
             {
                 Console.Clear();
-                Console.WriteLine(" ВЫ ПРОИГРАЛИ \nЖелаете ли вы еще раз попробовать спасти принцессу?\n1) Да, я должен ее спасти\n" +
-                    "2) Нет, думаю, придет другой принц и спасет её");
-                condition = true;
-            }
-            
-            if (prince.valueXPrince == 10 && prince.valueYPrince == 10)
-            {
-                Console.Clear();
-                Console.WriteLine("  ВЫ ПОБЕДИЛИ!!!  Принцесса спасена \nЖелаете ли вы спасти еще одну принцессу?\n1) Да, нужно спасти больше принцесс\n" +
-                    "2) Нет, с меня хватит, я устал");
-                condition = true;
+                Console.WriteLine(loss);
+                conditionEndGame = true;
             }
 
-            if (condition)
+            if (prince.XPrince == 10 && prince.YPrince == 10)
+            {
+                Console.Clear();
+                Console.WriteLine(win);
+                conditionEndGame = true;
+            }
+
+            if (conditionEndGame)
             {
                 int endChoice = 0;
                 bool isParsed = false;
+
                 while (!isParsed)
                 {
                     isParsed = int.TryParse(Console.ReadLine(), out endChoice);
+
                     if (endChoice != 1 && endChoice != 2)
                     {
                         isParsed = false;
                     }
                 }
 
-                if (endChoice == 1)
+                switch (endChoice)
                 {
-                    continuation = false;
-                    Console.Clear();
-                }
-                if (endChoice == 2)
-                {
-                    continuation = false;
-                    starting = false;
-                    Console.Clear();
-                    Console.WriteLine("Возвращайся скорее, ещё много принцесс ждут, когда ты их спасешь");
+                    case 1:
+                        isContinue = false;
+                        Console.Clear();
+                        break;
+
+                    case 2:
+                        isContinue = false;
+                        isStart = false;
+                        Console.Clear();
+                        Console.WriteLine(finalText);
+                        break;
                 }
             }
         }

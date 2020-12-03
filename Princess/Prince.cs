@@ -1,20 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Princess
 {
-    class Prince
+    public class Prince
     {
+        private const string health = "\nHP = {0}  ";
 
-        public int HP = 10;
-        public int valueXPrince = 1;
-        public int valueYPrince = 1;
-        
+        public int HP { get; set; }
+        public int XPrince { get; set; }
+        public int YPrince { get; set; }
+
+        public Prince()
+        {
+            HP = 10;
+            XPrince = 1;
+            YPrince = 1;
+        }
+
         public void PrintHP()
         {
-            Console.WriteLine("\nHP = {0}  ", HP);
+            Console.WriteLine(health, HP);
         }
-        
     }
 }
