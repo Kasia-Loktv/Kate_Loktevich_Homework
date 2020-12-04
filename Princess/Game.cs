@@ -4,19 +4,29 @@ namespace Princess
 {
     public class Game
     {
-        private const int numberOfRows = 10;
-        private const int numberOfSlashes = 11;
+        private const int NumberOfRows = 10;
+        private const int NumberOfSlashes = 11;
 
-        private const string separatorOfRows = "------------------------------------------";
-        private const string finalText = "Возвращайся скорее, ещё много принцесс ждут, когда ты их спасешь";
-        private const string win = "ВЫ ПОБЕДИЛИ!!!  Принцесса спасена \nЖелаете ли вы спасти еще одну принцессу?\n1) Да, нужно спасти больше принцесс\n2) Нет, с меня хватит, я устал";
-        private const string loss = "ВЫ ПРОИГРАЛИ \nЖелаете ли вы еще раз попробовать спасти принцессу?\n1) Да, я должен ее спасти\n2) Нет, думаю, придет другой принц и спасет её";
+        private const string SeparatorOfRows = "------------------------------------------";
+        private const string Slash = "| ";
+        private const string PrinceSymbol = "X ";
+        private const string PrincessSymbol = "P ";
+        private const string StarSymbol = "*";
+
+        private const string FinalText = "Возвращайся скорее, другие принцессы также ждут, когда ты их спасешь";
+        private const string Win = "ВЫ ПОБЕДИЛИ!!!  Принцесса спасена \nЖелаете ли вы спасти еще одну принцессу?\n1) Да, нужно спасти больше принцесс\n2) Нет, с меня хватит, я устал";
+        private const string Loss = "ВЫ ПРОИГРАЛИ \nЖелаете ли вы еще раз попробовать спасти принцессу?\n1) Да, я должен ее спасти\n2) Нет, думаю, придет другой принц и спасет её";
 
         private string[,] traps;
-        private bool isStart = true;
-        private bool isContinue = true;
+        private bool isStart;
+        private bool isContinue;
+        private bool conditionEndGame;
+        private bool isParsed;
+        private int endChoice;
 
-        Prince prince;
+        private Random random;
+
+        private Prince prince;
 
         public void PlayGame()
         {
@@ -46,31 +56,31 @@ namespace Princess
 
         public void SetTraps()
         {
-            Random random = new Random();
+            random = new Random();
 
             for (int i = 0; i <= 9; i++)
             {
-                traps[random.Next(1, 11), random.Next(1, 11)] = "*";
+                traps[random.Next(1, 11), random.Next(1, 11)] = StarSymbol;
             }
         }
 
         public void PrintField()
         {
-            for (int row = 1; row <= numberOfRows; row++)
+            for (int row = 1; row <= NumberOfRows; row++)
             {
-                Console.WriteLine(separatorOfRows);
+                Console.WriteLine(SeparatorOfRows);
 
-                for (int column = 1; column <= numberOfSlashes; column++)
+                for (int column = 1; column <= NumberOfSlashes; column++)
                 {
-                    Console.Write("| ");
+                    Console.Write(Slash);
 
                     if (column == prince.XPrince && row == prince.YPrince)
                     {
-                        Console.Write("X ");
+                        Console.Write(PrinceSymbol);
                     }
                     else if (row == 10 && column == 10)
                     {
-                        Console.Write("P ");
+                        Console.Write(PrincessSymbol);
                     }
                     else
                     {
@@ -81,7 +91,7 @@ namespace Princess
                 Console.WriteLine();
             }
 
-            Console.WriteLine(separatorOfRows);
+            Console.WriteLine(SeparatorOfRows);
         }
 
         public void MovePrince()
@@ -126,9 +136,9 @@ namespace Princess
 
         public void ReduceHP()
         {
-            Random random = new Random();
+            random = new Random();
 
-            if (traps[prince.XPrince, prince.YPrince] == "*")
+            if (traps[prince.XPrince, prince.YPrince] == StarSymbol)
             {
                 prince.HP -= random.Next(1, 11);
             }
@@ -136,26 +146,26 @@ namespace Princess
 
         public void FinishGame()
         {
-            bool conditionEndGame = false;
+            conditionEndGame = false;
 
             if (prince.HP <= 0)
             {
                 Console.Clear();
-                Console.WriteLine(loss);
+                Console.WriteLine(Loss);
                 conditionEndGame = true;
             }
 
             if (prince.XPrince == 10 && prince.YPrince == 10)
             {
                 Console.Clear();
-                Console.WriteLine(win);
+                Console.WriteLine(Win);
                 conditionEndGame = true;
             }
 
             if (conditionEndGame)
             {
-                int endChoice = 0;
-                bool isParsed = false;
+                endChoice = 0;
+                isParsed = false;
 
                 while (!isParsed)
                 {
@@ -178,7 +188,7 @@ namespace Princess
                         isContinue = false;
                         isStart = false;
                         Console.Clear();
-                        Console.WriteLine(finalText);
+                        Console.WriteLine(FinalText);
                         break;
                 }
             }

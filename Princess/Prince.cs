@@ -4,7 +4,7 @@ namespace Princess
 {
     public class Prince
     {
-        private const string health = "\nHP = {0}  ";
+        private const string Health = "\nHP = {0}  ";
 
         public int HP { get; set; }
         public int XPrince { get; set; }
@@ -19,7 +19,7 @@ namespace Princess
 
         public void PrintHP()
         {
-            Console.WriteLine(health, HP);
+            Console.WriteLine(Health, HP);
         }
     }
 }
