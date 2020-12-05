@@ -7,7 +7,7 @@ namespace Princess
         private const int NumberOfRows = 10;
         private const int NumberOfSlashes = 11;
 
-        private const string SeparatorOfRows = "------------------------------------------";
+        private const string RowSeparator = "------------------------------------------";
         private const string Slash = "| ";
         private const string PrinceSymbol = "X ";
         private const string PrincessSymbol = "P ";
@@ -68,7 +68,7 @@ namespace Princess
         {
             for (int row = 1; row <= NumberOfRows; row++)
             {
-                Console.WriteLine(SeparatorOfRows);
+                Console.WriteLine(RowSeparator);
 
                 for (int column = 1; column <= NumberOfSlashes; column++)
                 {
@@ -91,7 +91,7 @@ namespace Princess
                 Console.WriteLine();
             }
 
-            Console.WriteLine(SeparatorOfRows);
+            Console.WriteLine(RowSeparator);
         }
 
         public void MovePrince()
