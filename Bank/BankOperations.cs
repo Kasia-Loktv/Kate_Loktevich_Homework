@@ -5,28 +5,6 @@ namespace Bank
 {
     public class BankOperations
     {
-        private const string TextOfMenu = "Выберите операцию:\n1. Создать счёт \n2. Создать карту \n" +
-            "3. Положить деньги на счёт \n4. Снять деньги со счёта \n5. Перевести средства с одного счёта на другой \n" +
-            "6. Перевести средства на счёт другого пользователя банка\n";
-        private const string TextOfFirstMenu = "У Вас пока нет счетов \nВыберите операцию:\n1. Создать счёт \n";
-        private const string TextOfCards = "Выберите тип карты: 1-дебетовая, 2-кредитная";
-        private const string TextOfChoice = "Ваш выбор: ";
-        private const string TextOfAccount = "Выберите счет";
-        private const string TextOfSum = "Введите сумму";
-        private const string ListItem = "{0}. {1}";
-        private const string ExistenceOfCredit = "На счете есть кредит. Сначала погасите его!";
-        private const string TextOfAccountForTransfer = "На какой счёт перевести деньги? ";
-        private const string TextOfRecipient = "Введите ФИО получателя: ";
-        private const string TextOfAccountLength = "Введите 20 символов: ";
-        private const string ErrorMessage = "ОШИБКА: {0}\n";
-        private const string ErrorOfCreditCard = "Это кредитный счет. На него можно завести только кредитную карту";
-        private const string ErrorOfDebitCard = "Это дебетовый счет. На него можно завести только дебетовую карту";
-        private const string ErrorOfValidation = "Неправильный ввод. Введите ещё раз";
-        private const string ErrorOfTransfer = "Операция запрещена. Запрещены переводы с кредитной карты на дебетовую";
-        private const string NotEnoughMoney = "Недостаточно средств!";
-
-        private const int AccountLength = 20;
-
         private string message;
         private string recipientName;
         private string recipientAccount;
@@ -42,34 +20,31 @@ namespace Bank
         public void StartBank()
         {
             accounts = new List<Account>();
-            Console.Write(TextOfFirstMenu + TextOfChoice);
 
-            while (!int.TryParse(Console.ReadLine(), out menuChoice) || menuChoice != (int)MenuItem.CreateAccount)
-            {
-                Console.WriteLine(ErrorOfValidation);
-            }
+            Console.Write(Resources.TextOfFirstMenu + Resources.TextOfChoice);
+            Validation.ValidateStartInput((int)MenuItem.CreateAccount, out menuChoice);
 
-            accounts.Add(new Account());
+            CreateAccount();   
 
             while (true)
             {
                 accountNumber = 0;
                 ShowAccountsAndCards();
-                Console.WriteLine(TextOfMenu);
+                Console.WriteLine(Resources.TextOfMenu);
 
                 if (message != null)
                 {
-                    Console.WriteLine(ErrorMessage, message);
+                    Console.WriteLine(Resources.ErrorMessage, message);
                     message = null;
                 }
 
-                Console.WriteLine(TextOfChoice);
-                ValidateInput(out menuChoice);
+                Console.WriteLine(Resources.TextOfChoice);
+                Validation.ValidateInput(out menuChoice);
 
                 switch (menuChoice)
                 {
                     case (int)MenuItem.CreateAccount:
-                        accounts.Add(new Account());
+                        CreateAccount();
                         break;
 
                     case (int)MenuItem.CreateCard:
@@ -104,7 +79,7 @@ namespace Bank
 
             foreach (Account account in accounts)
             {
-                Console.WriteLine(ListItem, accountNumber.ToString(), account.GetAccountInformation());
+                Console.WriteLine(Resources.ListItem, accountNumber.ToString(), account.GetAccountInformation());
                 accountNumber++;
 
                 foreach (var card in account.Cards)
@@ -116,69 +91,57 @@ namespace Bank
             }
         }
 
-        public void CreateCard()
+        public void CreateAccount()
         {
-            Console.WriteLine(TextOfAccount);
-            ValidateInput(accounts.Count, out accountNumber);
-
-            Console.WriteLine(TextOfCards);
-            ValidateInput((int)CardItem.DebitCard, (int)CardItem.CreditCard, out cardChoice);
+            Console.WriteLine(Resources.TextOfCards);
+            Validation.ValidateInput((int)AccountItem.DebitAccount, (int)AccountItem.CreditAccount, out cardChoice);
 
             switch (cardChoice)
             {
-                case (int)CardItem.DebitCard:
-                    if (accounts[accountNumber - 1].IsContainCreditCard)
-                    {
-                        message = ErrorOfCreditCard;
-                    }
-                    else
-                    {
-                        accounts[accountNumber - 1].Cards.Add(new DebitCard());
-                        accounts[accountNumber - 1].IsWithoutCards = false;
-                    }
+                case (int)AccountItem.DebitAccount:
+                    accounts.Add(new DebitAccount());                    
                     break;
 
-                case (int)MenuItem.CreateCard:
-                    if (!accounts[accountNumber - 1].IsContainCreditCard && !accounts[accountNumber - 1].IsWithoutCards)
-                    {
-                        message = ErrorOfDebitCard;
-                    }
-                    else
-                    {
-                        accounts[accountNumber - 1].Cards.Add(new CreditCard());
-                        accounts[accountNumber - 1].IsWithoutCards = false;
-                        accounts[accountNumber - 1].IsContainCreditCard = true;
-                    }
+                case (int)AccountItem.CreditAccount:
+                    accounts.Add(new CreditAccount());                 
                     break;
             }
         }
 
+        public void CreateCard()
+        {
+            Console.WriteLine(Resources.TextOfAccount);
+            Validation.ValidateInput(accounts.Count, out accountNumber);
+
+            accounts[accountNumber - 1].Cards.Add(new Card());                       
+        }
+
         public void PutMoney()
         {
-            Console.WriteLine(TextOfAccount);
-            ValidateInput(accounts.Count, out accountNumber);
+            Console.WriteLine(Resources.TextOfAccount);
+            Validation.ValidateInput(accounts.Count, out accountNumber);
 
-            Console.WriteLine(TextOfSum);
-            ValidateInput(out money);
+            Console.WriteLine(Resources.TextOfSum);
+            Validation.ValidateInput(out money);
 
             accounts[accountNumber - 1].IncreaseBalance(money);
         }
 
         public void WithdrawMoney()
         {
-            Console.WriteLine(TextOfAccount);
-            ValidateInput(accounts.Count, out accountNumber);
+            Console.WriteLine(Resources.TextOfAccount);
+            Validation.ValidateInput(accounts.Count, out accountNumber);
 
-            Console.WriteLine(TextOfSum);
-            ValidateInput(out money);
+            Console.WriteLine(Resources.TextOfSum);
+            Validation.ValidateInput(out money);
 
-            if (!accounts[accountNumber - 1].IsContainCreditCard && accounts[accountNumber - 1].Balance < money)
+            if (accounts[accountNumber - 1] is DebitAccount && accounts[accountNumber - 1].Balance < money)
             {
-                message = NotEnoughMoney;
+                message = Resources.NotEnoughMoney;
             }
             else if (accounts[accountNumber - 1].Balance < 0)
             {
-                message = ExistenceOfCredit;
+                message = Resources.ExistenceOfCredit;
             }
             else
             {
@@ -188,26 +151,26 @@ namespace Bank
 
         public void TransferMoneyInside()
         {
-            Console.WriteLine(TextOfAccount);
-            ValidateInput(accounts.Count, out accountNumber);
+            Console.WriteLine(Resources.TextOfAccount);
+            Validation.ValidateInput(accounts.Count, out accountNumber);
 
-            Console.WriteLine(TextOfAccountForTransfer);
-            ValidateInput(accounts.Count, out accountNumberForTransfer);
+            Console.WriteLine(Resources.TextOfAccountForTransfer);
+            Validation.ValidateInput(accounts.Count, out accountNumberForTransfer);
 
-            Console.WriteLine(TextOfSum);
-            ValidateInput(out money);
+            Console.WriteLine(Resources.TextOfSum);
+            Validation.ValidateInput(out money);
 
-            if (!accounts[accountNumber - 1].IsContainCreditCard && accounts[accountNumber - 1].Balance < money)
+            if (accounts[accountNumber - 1] is DebitAccount && accounts[accountNumber - 1].Balance < money)
             {
-                message = NotEnoughMoney;
+                message = Resources.NotEnoughMoney;
             }
-            else if (accounts[accountNumber - 1].IsContainCreditCard && !accounts[accountNumberForTransfer - 1].IsContainCreditCard)
+            else if (accounts[accountNumber - 1] is CreditAccount && accounts[accountNumberForTransfer - 1] is DebitAccount)
             {
-                message = ErrorOfTransfer;
+                message = Resources.ErrorOfTransfer;
             }
             else if (accounts[accountNumber - 1].Balance < 0)
             {
-                message = ExistenceOfCredit;
+                message = Resources.ExistenceOfCredit;
             }
             else
             {
@@ -218,59 +181,29 @@ namespace Bank
 
         public void TransferMoneyOutside()
         {
-            Console.WriteLine(TextOfAccount);
-            ValidateInput(accounts.Count, out accountNumber);
+            Console.WriteLine(Resources.TextOfAccount);
+            Validation.ValidateInput(accounts.Count, out accountNumber);
 
-            Console.WriteLine(TextOfRecipient);
+            Console.WriteLine(Resources.TextOfRecipient);
             recipientName = Console.ReadLine();
 
-            Console.WriteLine(TextOfAccountForTransfer + TextOfAccountLength);
-            recipientAccount = Console.ReadLine();
+            Console.WriteLine(Resources.TextOfAccountForTransfer + Resources.TextOfAccountLength);
+            Validation.ValidateInput(Resources.AccountLength, out recipientAccount);            
 
-            while (recipientAccount.Length != AccountLength)
+            Console.WriteLine(Resources.TextOfSum);
+            Validation.ValidateInput(out money);
+
+            if (accounts[accountNumber - 1] is DebitAccount && accounts[accountNumber - 1].Balance < money)
             {
-                Console.WriteLine(TextOfAccountLength);
-                recipientAccount = Console.ReadLine();
-            }
-
-            Console.WriteLine(TextOfSum);
-            ValidateInput(out money);
-
-            if (!accounts[accountNumber - 1].IsContainCreditCard && accounts[accountNumber - 1].Balance < money)
-            {
-                message = NotEnoughMoney;
+                message = Resources.NotEnoughMoney;
             }
             else if (accounts[accountNumber - 1].Balance < 0)
             {
-                message = ExistenceOfCredit;
+                message = Resources.ExistenceOfCredit;
             }
             else
             {
                 accounts[accountNumber - 1].ReduceBalance(money);
-            }
-        }
-
-        public void ValidateInput(out int input)
-        {
-            while (!int.TryParse(Console.ReadLine(), out input))
-            {
-                Console.WriteLine(ErrorOfValidation);
-            }
-        }
-
-        public void ValidateInput(int accountCounter, out int input)
-        {
-            while (!int.TryParse(Console.ReadLine(), out input) || input > accountCounter)
-            {
-                Console.WriteLine(ErrorOfValidation);
-            }
-        }
-
-        public void ValidateInput(int debitCard, int creditCard, out int input)
-        {
-            while (!int.TryParse(Console.ReadLine(), out input) || (input != debitCard && input != creditCard))
-            {
-                Console.WriteLine(ErrorOfValidation);
             }
         }
     }

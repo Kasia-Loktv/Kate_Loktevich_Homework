@@ -2,19 +2,19 @@
 
 namespace Bank
 {
-    public abstract class Card
+    public class Card
     {
         private const int NumberLength = 16;
+        private const string CardWord = "Карта № ";
 
-        public string NumberCard { get; set; }
-
+        private string numberCard;
         private string generatedNumber;
 
         private Random random;
 
         public Card()
         {
-            NumberCard = SetName();
+            numberCard = SetName();
         }
 
         private string SetName()
@@ -27,6 +27,9 @@ namespace Bank
             return generatedNumber;
         }
 
-        public abstract string GetCardInformation();
+        public string GetCardInformation()
+        {
+            return CardWord + numberCard;
+        }
     }
 }

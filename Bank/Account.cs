@@ -3,31 +3,27 @@ using System.Collections.Generic;
 
 namespace Bank
 {
-    public class Account
+    public abstract class Account
     {
         private const int NameLength = 20;
 
-        private const string AccountWord = "Счет ";
-        private const string BalanceWord = " Баланс: ";
+        public const string AccountWord = " cчет ";
+        public const string BalanceWord = " Баланс: ";
 
+        public string Name { get; private set; }
         public int Balance { get; private set; }
-        public bool IsContainCreditCard { get; set; }
-        public bool IsWithoutCards { get; set; }
 
         public List<Card> Cards { get; set; }
-
-        private string name;
+       
         private string generatedName;
 
         private Random random;
 
         public Account()
         {
-            name = SetName();
+            Name = SetName();
             Balance = 0;
             Cards = new List<Card>();
-            IsContainCreditCard = false;
-            IsWithoutCards = true;
         }
 
         private string SetName()
@@ -40,11 +36,6 @@ namespace Bank
             return generatedName;
         }
 
-        public string GetAccountInformation()
-        {
-            return AccountWord + name + BalanceWord + Balance;
-        }
-
         public void IncreaseBalance(int cash)
         {
             Balance += cash;
@@ -54,5 +45,7 @@ namespace Bank
         {
             Balance -= cash;
         }
+
+        public abstract string GetAccountInformation();
     }
 }
