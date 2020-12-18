@@ -8,7 +8,6 @@ namespace Bank
         private const string CardWord = "Карта № ";
 
         private string numberCard;
-        private string generatedNumber;
 
         private Random random;
 
@@ -22,9 +21,9 @@ namespace Bank
             random = new Random();
             for (int i = 0; i < NumberLength; i++)
             {
-                generatedNumber += random.Next(1, 10).ToString();
+                numberCard += random.Next(1, 10).ToString();
             }
-            return generatedNumber;
+            return numberCard;
         }
 
         public string GetCardInformation()

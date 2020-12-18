@@ -6,8 +6,6 @@ namespace Bank
     public class BankOperations
     {
         private string message;
-        private string recipientName;
-        private string recipientAccount;
 
         private int accountNumber;
         private int accountNumberForTransfer;
@@ -185,10 +183,10 @@ namespace Bank
             Validation.ValidateInput(accounts.Count, out accountNumber);
 
             Console.WriteLine(Resources.TextOfRecipient);
-            recipientName = Console.ReadLine();
+            Validation.ValidateInput();
 
             Console.WriteLine(Resources.TextOfAccountForTransfer + Resources.TextOfAccountLength);
-            Validation.ValidateInput(Resources.AccountLength, out recipientAccount);            
+            Validation.ValidateInput(Resources.AccountLength);            
 
             Console.WriteLine(Resources.TextOfSum);
             Validation.ValidateInput(out money);

@@ -1,11 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Bank
 {
     public class Validation
     {
+        public static void ValidateInput()
+        {
+            while (String.IsNullOrWhiteSpace(Console.ReadLine()))
+            {
+                Console.WriteLine(Resources.ErrorOfValidation);
+            }
+        }
+
+        public static void ValidateInput(int lengthOfAccount)
+        {
+            while (Console.ReadLine().Length != lengthOfAccount)
+            {
+                Console.WriteLine(Resources.TextOfAccountLength);
+            }
+        }
+
         public static void ValidateInput(out int input)
         {
             while (!int.TryParse(Console.ReadLine(), out input))
@@ -22,16 +36,6 @@ namespace Bank
             }
         }
 
-        public static void ValidateInput(int lengthOfAccount, out string input)
-        {
-            input = Console.ReadLine();
-            while (input.Length != lengthOfAccount)
-            {
-                Console.WriteLine(Resources.TextOfAccountLength);
-                input = Console.ReadLine();
-            }
-        }
-
         public static void ValidateInput(int debitCard, int creditCard, out int input)
         {
             while (!int.TryParse(Console.ReadLine(), out input) || (input != debitCard && input != creditCard))
@@ -39,13 +43,13 @@ namespace Bank
                 Console.WriteLine(Resources.ErrorOfValidation);
             }
         }
-        
+
         public static void ValidateStartInput(int menuItem, out int input)
         {
             while (!int.TryParse(Console.ReadLine(), out input) || input != menuItem)
             {
                 Console.WriteLine(Resources.ErrorOfValidation);
             }
-        }        
+        }
     }
 }

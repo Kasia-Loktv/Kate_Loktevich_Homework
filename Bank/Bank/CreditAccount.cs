@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Bank
+﻿namespace Bank
 {
     public class CreditAccount : Account
     {
@@ -12,5 +8,5 @@ namespace Bank
         {
             return CreditWord + AccountWord + Name + BalanceWord + Balance;
         }
-    }  
+    }
 }

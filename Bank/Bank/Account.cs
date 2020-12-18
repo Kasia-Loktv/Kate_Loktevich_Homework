@@ -15,8 +15,6 @@ namespace Bank
 
         public List<Card> Cards { get; set; }
        
-        private string generatedName;
-
         private Random random;
 
         public Account()
@@ -31,9 +29,9 @@ namespace Bank
             random = new Random();
             for (int i = 0; i < NameLength; i++)
             {
-                generatedName += random.Next(1, 10).ToString();
+                Name += random.Next(1, 10).ToString();
             }
-            return generatedName;
+            return Name;
         }
 
         public void IncreaseBalance(int cash)
