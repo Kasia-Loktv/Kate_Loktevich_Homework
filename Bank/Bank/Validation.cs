@@ -22,7 +22,7 @@ namespace Bank
 
         public static void ValidateInput(out int input)
         {
-            while (!int.TryParse(Console.ReadLine(), out input))
+            while (!int.TryParse(Console.ReadLine(), out input) || input < 0)
             {
                 Console.WriteLine(Resources.ErrorOfValidation);
             }
