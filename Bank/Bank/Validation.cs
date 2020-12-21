@@ -1,12 +1,13 @@
 ﻿using System;
+using static System.String;
 
 namespace Bank
 {
-    public class Validation
+    public static class Validation
     {
         public static void ValidateInput()
         {
-            while (String.IsNullOrWhiteSpace(Console.ReadLine()))
+            while (IsNullOrWhiteSpace(Console.ReadLine()))
             {
                 Console.WriteLine(Resources.ErrorOfValidation);
             }

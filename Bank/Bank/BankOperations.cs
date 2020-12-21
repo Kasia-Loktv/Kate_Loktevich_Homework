@@ -97,11 +97,11 @@ namespace Bank
             switch (cardChoice)
             {
                 case (int)AccountItem.DebitAccount:
-                    accounts.Add(new DebitAccount());                    
+                    accounts.Add(new DebitAccount());
                     break;
 
                 case (int)AccountItem.CreditAccount:
-                    accounts.Add(new CreditAccount());                 
+                    accounts.Add(new CreditAccount());
                     break;
             }
         }
@@ -111,7 +111,7 @@ namespace Bank
             Console.WriteLine(Resources.TextOfAccount);
             Validation.ValidateInput(accounts.Count, out accountNumber);
 
-            accounts[accountNumber - 1].Cards.Add(new Card());                       
+            accounts[accountNumber - 1].Cards.Add(new Card());
         }
 
         public void PutMoney()
@@ -186,7 +186,7 @@ namespace Bank
             Validation.ValidateInput();
 
             Console.WriteLine(Resources.TextOfAccountForTransfer + Resources.TextOfAccountLength);
-            Validation.ValidateInput(Resources.AccountLength);            
+            Validation.ValidateInput(Resources.AccountLength);
 
             Console.WriteLine(Resources.TextOfSum);
             Validation.ValidateInput(out money);
