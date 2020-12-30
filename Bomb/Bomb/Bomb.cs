@@ -21,7 +21,7 @@ namespace Bomb
 
         public Bomb(int seconds)
         {
-            Password = "1111";//SetPassword();
+            Password = SetPassword();
             timer = seconds;
             isDisabled = false;
             isNoAttempts = true;
