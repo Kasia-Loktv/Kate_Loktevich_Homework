@@ -5,20 +5,21 @@ namespace Bomb
 {
     public static class Validation
     {
-        private static string inputData;
+        private static string inputName;
 
         private static int inputMenuItem;
+        private static int inputData;
 
-        public static string ValidateInput()
+        public static string ValidateInputName()
         {
-            inputData = Console.ReadLine();
+            inputName = Console.ReadLine();
 
-            while (IsNullOrWhiteSpace(inputData))
+            while (IsNullOrWhiteSpace(inputName))
             {
                 Console.WriteLine(Resources.ErrorOfValidation);
-                inputData = Console.ReadLine();
+                inputName = Console.ReadLine();
             }
-            return inputData;
+            return inputName;
         }
 
         public static int ValidateInputMenuItem()
@@ -30,12 +31,13 @@ namespace Bomb
             return inputMenuItem;
         }
 
-        public static void ValidateInput(out int input)
+        public static int ValidateInput()
         {
-            while (!int.TryParse(Console.ReadLine(), out input) || input < 0)
+            while (!int.TryParse(Console.ReadLine(), out inputData) || inputData < 0)
             {
                 Console.WriteLine(Resources.ErrorOfValidation);
             }
+            return inputData;
         }
     }
 }

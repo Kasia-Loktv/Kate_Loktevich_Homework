@@ -9,7 +9,7 @@ namespace Bomb
 
         public bool IsStop { get; set; }
 
-        private int numberOfAttempts;
+        private readonly int numberOfAttempts;
         private int attemptsUsed;
 
         private string password;

@@ -10,7 +10,7 @@ namespace Bomb
 
         public string Password { get; private set; }
 
-        private int timer;
+        private readonly int timer;
         private int counterOfTimer;
         private int attemptsSpent;
 

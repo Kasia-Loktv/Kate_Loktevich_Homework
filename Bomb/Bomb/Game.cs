@@ -6,10 +6,8 @@ namespace Bomb
     public static class Game
     {
         public delegate void GameEventHandler();
-        public static GameEventHandler gameEventHandler;
 
         public delegate void GameEventHandlerWithInteger(int attempts);
-        public static GameEventHandlerWithInteger gameEventHandlerWithInteger;
 
         public static event GameEventHandlerWithInteger BombDisabled;
         public static event GameEventHandler NoMoreAttempts;
@@ -25,10 +23,10 @@ namespace Bomb
         public static void StartGame()
         {
             Console.WriteLine(Resources.TextOfAttemps);
-            Validation.ValidateInput(out numberOfAttempts);
+            numberOfAttempts = Validation.ValidateInput();
 
             Console.WriteLine(Resources.TextOfSeconds);
-            Validation.ValidateInput(out timeInSeconds);
+            timeInSeconds = Validation.ValidateInput();
 
             Bomb bomb = new Bomb(timeInSeconds);
 
@@ -46,9 +44,9 @@ namespace Bomb
         public static void CreateResult(int seconds, int attemps)
         {
             Console.WriteLine(Resources.TextOfInputName);
-            survivorName = Validation.ValidateInput();
+            survivorName = Validation.ValidateInputName();
             result = new Result { Name = survivorName, SecondsSpent = seconds, AttemptSpent = attemps };
-            DataJsonProcessor.AddResultToJsonFile(result);
+            JsonDataProcessor.AddResultToJsonFile(result);
         }
 
         public static void StartMenu()
@@ -63,7 +61,7 @@ namespace Bomb
                     break;
 
                 case (int)MenuItem.LookListOfResult:
-                    PrintListOfResults();
+                    ShowListOfResults();
                     break;
 
                 case (int)MenuItem.EndGame:
@@ -71,12 +69,12 @@ namespace Bomb
             }
         }
 
-        public static void PrintListOfResults()
+        public static void ShowListOfResults()
         {
             Console.Clear();
             Console.WriteLine(Resources.ListItem, Resources.TextOfNameСolumn, Resources.TextOfSecondsСolumn, Resources.TextOfAttemptsСolumn);
 
-            List<Result> results = DataJsonProcessor.LoadJson();
+            List<Result> results = JsonDataProcessor.LoadJson();
             foreach (Result res in results)
             {
                 Console.WriteLine(Resources.ListItem, res.Name, res.SecondsSpent, res.AttemptSpent);
@@ -87,22 +85,12 @@ namespace Bomb
 
         public static void OnBombDisabled(int attempts)
         {
-            gameEventHandlerWithInteger = BombDisabled;
-
-            if (gameEventHandlerWithInteger != null)
-            {
-                gameEventHandlerWithInteger(attempts);
-            }
+            BombDisabled?.Invoke(attempts);
         }
 
         public static void OnNoMoreAttempts()
         {
-            gameEventHandler = NoMoreAttempts;
-
-            if (gameEventHandler != null)
-            {
-                gameEventHandler();
-            }
+            NoMoreAttempts?.Invoke();
         }
     }
 }

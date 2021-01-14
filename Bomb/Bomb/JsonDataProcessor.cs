@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Bomb
 {
-    public static class DataJsonProcessor
+    public static class JsonDataProcessor
     {
         private const string Path = "result.json";
 
@@ -26,7 +26,7 @@ namespace Bomb
             return results;
         }
 
-        public static void RecordJson(List<Result> data)
+        public static void SaveJson(List<Result> data)
         {
             jsonString = JsonSerializer.Serialize<List<Result>>(data);
             File.WriteAllText(Path, jsonString);
@@ -36,7 +36,7 @@ namespace Bomb
         {
             results = LoadJson();
             results.Add(result);
-            RecordJson(results);
+            SaveJson(results);
         }
     }
 }
