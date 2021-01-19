@@ -16,6 +16,6 @@
         public const string MenuMessage = "Для перехода в меню нажмите Enter.";
         public const string InvalidPasswordMessage = "Неверный пароль. Введите еще раз.";
         public const string NoAttempsMessage = "Неверный пароль. Попыток больше нет.";
-        public const string ErrorOfValidation = "Неправильный ввод. Введите ещё раз.";
+        public const string ErrorOfConsoleInput = "Неправильный ввод. Введите ещё раз.";
     }
 }

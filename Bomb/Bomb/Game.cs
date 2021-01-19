@@ -23,10 +23,10 @@ namespace Bomb
         public static void StartGame()
         {
             Console.WriteLine(Resources.TextOfAttemps);
-            numberOfAttempts = Validation.ValidateInput();
+            numberOfAttempts = ConsoleInput.InputNumber();
 
             Console.WriteLine(Resources.TextOfSeconds);
-            timeInSeconds = Validation.ValidateInput();
+            timeInSeconds = ConsoleInput.InputNumber();
 
             Bomb bomb = new Bomb(timeInSeconds);
 
@@ -44,7 +44,7 @@ namespace Bomb
         public static void CreateResult(int seconds, int attemps)
         {
             Console.WriteLine(Resources.TextOfInputName);
-            survivorName = Validation.ValidateInputName();
+            survivorName = ConsoleInput.InputName();
             result = new Result { Name = survivorName, SecondsSpent = seconds, AttemptSpent = attemps };
             JsonDataProcessor.AddResultToJsonFile(result);
         }
@@ -52,7 +52,7 @@ namespace Bomb
         public static void StartMenu()
         {
             Console.WriteLine(Resources.TextOfMenu);
-            menuChoice = Validation.ValidateInputMenuItem();
+            menuChoice = ConsoleInput.InputMenuItem();
 
             switch (menuChoice)
             {
